@@ -133,10 +133,16 @@ module Paperclip
     def dirty?
       @dirty
     end
+    
+    # So the dirty status can be removed, preventing images being overwritten on save
+    def dirty=(value)
+      @dirty = value
+    end
 
     # Saves the file, if there are no errors. If there are, it flushes them to
     # the instance's errors and returns false, cancelling the save.
     def save
+      return unless dirty?
       if valid?
         flush_deletes
         flush_writes
